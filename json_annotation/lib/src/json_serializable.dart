@@ -2,9 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:collection';
+
 import 'allowed_keys_helpers.dart';
 import 'checked_helpers.dart';
 import 'json_key.dart';
+import 'json_transformers.dart';
 
 part 'json_serializable.g.dart';
 
@@ -184,6 +187,8 @@ class JsonSerializable {
   /// `null` runtime validation if it's critical.
   final bool nullable;
 
+  final Map<String, String> transformers;
+
   /// Creates a new [JsonSerializable] instance.
   const JsonSerializable({
     this.anyMap,
@@ -197,6 +202,7 @@ class JsonSerializable {
     this.includeIfNull,
     this.nullable,
     this.genericArgumentFactories,
+    this.transformers,
   });
 
   factory JsonSerializable.fromJson(Map<String, dynamic> json) =>
@@ -216,6 +222,7 @@ class JsonSerializable {
     includeIfNull: true,
     nullable: true,
     genericArgumentFactories: false,
+    transformers: defaultTransformers,
   );
 
   /// Returns a new [JsonSerializable] instance with fields equal to the
@@ -237,6 +244,7 @@ class JsonSerializable {
         nullable: nullable ?? defaults.nullable,
         genericArgumentFactories:
             genericArgumentFactories ?? defaults.genericArgumentFactories,
+        transformers: transformers ?? defaults.transformers,
       );
 
   Map<String, dynamic> toJson() => _$JsonSerializableToJson(this);

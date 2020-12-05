@@ -121,6 +121,7 @@ JsonSerializable mergeConfig(
     ignoreUnannotated: annotation.ignoreUnannotated ?? config.ignoreUnannotated,
     includeIfNull: annotation.includeIfNull ?? config.includeIfNull,
     nullable: annotation.nullable ?? config.nullable,
+    transformers: config.transformers,
   );
 }
 

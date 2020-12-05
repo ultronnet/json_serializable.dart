@@ -9,14 +9,14 @@ import '../helper_core.dart';
 import '../shared_checkers.dart';
 import '../type_helper.dart';
 
-class ValueHelper extends TypeHelper {
+class ValueHelper extends TypeHelper<TypeHelperContextWithConfig> {
   const ValueHelper();
 
   @override
   String serialize(
     DartType targetType,
     String expression,
-    TypeHelperContext context,
+    TypeHelperContextWithConfig context,
   ) {
     if (isObjectOrDynamic(targetType) ||
         simpleJsonTypeChecker.isAssignableFromType(targetType)) {
@@ -30,7 +30,7 @@ class ValueHelper extends TypeHelper {
   String deserialize(
     DartType targetType,
     String expression,
-    TypeHelperContext context,
+    TypeHelperContextWithConfig context,
   ) {
     if (isObjectOrDynamic(targetType)) {
       // just return it as-is. We'll hope it's safe.
@@ -40,7 +40,12 @@ class ValueHelper extends TypeHelper {
       return '($expression as num)${context.nullable ? '?' : ''}.toDouble()';
     } else if (simpleJsonTypeChecker.isAssignableFromType(targetType)) {
       final typeCode = typeToCode(targetType);
-      return '$expression as $typeCode';
+      final castFunc = context.config.transformers[typeCode];
+      if (castFunc != null) {
+        return '$castFunc($expression)';
+      } else {
+        return '$expression as $typeCode';
+      }
     }
 
     return null;

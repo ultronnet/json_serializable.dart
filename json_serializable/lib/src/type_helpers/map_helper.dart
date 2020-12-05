@@ -71,6 +71,10 @@ class MapHelper extends TypeHelper<TypeHelperContextWithConfig> {
 
     if (!isKeyStringable) {
       if (valueArgIsAny) {
+        final castFunc = context.config.transformers['Map'];
+        if (castFunc != null) {
+          expression = '$castFunc($expression)';
+        }
         if (context.config.anyMap) {
           if (isObjectOrDynamic(keyArg)) {
             return '$expression as Map';

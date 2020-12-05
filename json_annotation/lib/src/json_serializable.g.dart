@@ -19,7 +19,8 @@ JsonSerializable _$JsonSerializableFromJson(Map<String, dynamic> json) {
       'generic_argument_factories',
       'ignore_unannotated',
       'include_if_null',
-      'nullable'
+      'nullable',
+      'transformers'
     ]);
     final val = JsonSerializable(
       anyMap: $checkedConvert(json, 'any_map', (v) => v as bool),
@@ -38,6 +39,8 @@ JsonSerializable _$JsonSerializableFromJson(Map<String, dynamic> json) {
       nullable: $checkedConvert(json, 'nullable', (v) => v as bool),
       genericArgumentFactories:
           $checkedConvert(json, 'generic_argument_factories', (v) => v as bool),
+      transformers: $checkedConvert(json, 'transformers',
+          (v) => v == null ? v : (v as MapMixin).cast<String, String>()),
     );
     return val;
   }, fieldKeyMap: const {
@@ -66,6 +69,7 @@ Map<String, dynamic> _$JsonSerializableToJson(JsonSerializable instance) =>
       'ignore_unannotated': instance.ignoreUnannotated,
       'include_if_null': instance.includeIfNull,
       'nullable': instance.nullable,
+      'transformers': instance.transformers,
     };
 
 T _$enumDecode<T>(
