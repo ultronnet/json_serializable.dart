@@ -37,7 +37,12 @@ class ValueHelper extends TypeHelper<TypeHelperContextWithConfig> {
       return expression;
     } else if (const TypeChecker.fromUrl('dart:core#double')
         .isExactlyType(targetType)) {
-      return '($expression as num)${context.nullable ? '?' : ''}.toDouble()';
+      final castFunc = context.config.transformers['double'];
+      if (castFunc != null) {
+        return '$castFunc($expression)';
+      } else {
+        return '($expression as num)${context.nullable ? '?' : ''}.toDouble()';
+      }
     } else if (simpleJsonTypeChecker.isAssignableFromType(targetType)) {
       final typeCode = typeToCode(targetType);
       final castFunc = context.config.transformers[typeCode];
